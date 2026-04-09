@@ -10,7 +10,7 @@ export const ACADEMY_DATA = [
         duration: '0:00',
         price: '₹0',
         cover: 'cadenx-music/graphics/ss.png',
-        thumbnail: '/public/graphics/ss.png',
+        thumbnail: '/graphics/ss.png',
         purchaseUrl: 'https://forms.google.com/purchase-batch-1',
         videos: [
             { 
