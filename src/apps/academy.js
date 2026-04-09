@@ -1,3 +1,4 @@
+
 import { db, handleFirestoreError, OperationType } from '../firebase.js';
 
 export const ACADEMY_DATA = [
@@ -6,21 +7,34 @@ export const ACADEMY_DATA = [
         title: 'Sur Sadhana - Batch for beginners',
         description: 'The best basic production course for beginners. Master the fundamentals of music theory, DAW basics, and your first arrangement.',
         level: 'Beginner',
-        duration: '00 Hours',
-        price: 'FREE',
+        duration: '12 Hours',
+        price: '₹0',
         cover: 'graphics/sursadhana.png',
-        thumbnail: '/graphics/sursadhana.png',
+        thumbnail: 'graphics/sursadhana.png',
         purchaseUrl: 'https://forms.google.com/purchase-batch-1',
         videos: [
             { 
                 id: 'v1', 
                 title: 'Welcome to the batch!', 
-                duration: '00:00', 
+                duration: '15:00', 
                 thumbnail: '/graphics/sursadhana.png', 
                 url: '/graphics/sursadhana.png',
                 quizUrl: 'https://forms.google.com/your-quiz-link-1',
                 notes: '/notes/welcome1.txt',
+                quiz: [
+                    { q: "What is the primary focus of this batch?", o: ["Advanced Mixing", "Beginner Fundamentals", "Live Performance", "Marketing"], a: 1 },
+                    { q: "Which DAW is recommended for beginners?", o: ["Any DAW", "Only Ableton", "Only FL Studio", "Only Logic"], a: 0 }
+                ]
             },
+            { 
+                id: 'v2', 
+                title: 'Introduction to Sound', 
+                duration: '45:00', 
+                thumbnail: '/graphics/sursadhana.png', 
+                url: '/graphics/sursadhana.png',
+                quizUrl: 'https://forms.google.com/your-quiz-link-2',
+                notes: 'In this module, we explore the physics of sound and how it translates to digital audio.'
+            }
         ]
     },
 ];
@@ -449,17 +463,26 @@ export const AcademyApp = {
                 email: document.getElementById('enroll-email').value,
                 phone: document.getElementById('enroll-phone').value,
                 experience: document.getElementById('enroll-experience').value,
+                message: document.getElementById('enroll-message').value,
                 course: batchId,
                 status: 'pending',
                 createdAt: serverTimestamp()
             };
 
-            await addDoc(collection(db, 'enrollments'), enrollmentData);
+            try {
+                await addDoc(collection(db, 'enrollments'), enrollmentData);
+            } catch (error) {
+                handleFirestoreError(error, OperationType.CREATE, 'enrollments');
+            }
 
-            const userRef = doc(db, 'users', os.user.uid);
-            await updateDoc(userRef, {
-                purchasedBatches: arrayUnion(batchId)
-            });
+            try {
+                const userRef = doc(db, 'users', os.user.uid);
+                await updateDoc(userRef, {
+                    purchasedBatches: arrayUnion(batchId)
+                });
+            } catch (error) {
+                handleFirestoreError(error, OperationType.UPDATE, `users/${os.user.uid}`);
+            }
 
             try {
                 const batch = ACADEMY_DATA.find(b => b.id === batchId);
