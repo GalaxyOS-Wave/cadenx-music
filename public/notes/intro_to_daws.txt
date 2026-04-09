@@ -1,0 +1,12 @@
+Welcome to the Music Production Masterclass!
+
+In this first module, we will explore the world of Digital Audio Workstations (DAWs).
+A DAW is the heart of your studio. Whether you use Ableton Live, FL Studio, Logic Pro, or Pro Tools, the fundamental concepts remain the same.
+
+Key topics covered:
+1. Choosing the right DAW for your workflow.
+2. Understanding the interface (Timeline vs. Session view).
+3. Setting up your audio interface and MIDI controllers.
+4. Basic recording and editing techniques.
+
+Make sure to download the resources and complete the quiz after watching the video!
