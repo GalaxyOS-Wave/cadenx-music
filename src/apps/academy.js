@@ -1,26 +1,25 @@
-
 import { db, handleFirestoreError, OperationType } from '../firebase.js';
 
 export const ACADEMY_DATA = [
     {
         id: 'b1',
         title: 'Sur Sadhana - Batch for beginners',
-        description: 'The best basic production course for beginners',
+        description: 'The best basic production course for beginners. Master the fundamentals of music theory, DAW basics, and your first arrangement.',
         level: 'Beginner',
-        duration: '0:00',
-        price: '₹0',
-        cover: '/graphics/sursadhana.png',
+        duration: '00 Hours',
+        price: 'FREE',
+        cover: 'graphics/sursadhana.png',
         thumbnail: '/graphics/sursadhana.png',
         purchaseUrl: 'https://forms.google.com/purchase-batch-1',
         videos: [
             { 
                 id: 'v1', 
                 title: 'Welcome to the batch!', 
-                duration: '0:00', 
+                duration: '00:00', 
                 thumbnail: '/graphics/sursadhana.png', 
                 url: '/graphics/sursadhana.png',
                 quizUrl: 'https://forms.google.com/your-quiz-link-1',
-                notes: '/public/notes/advanced_eq.txt'
+                notes: '/notes/welcome1.txt',
             },
         ]
     },
@@ -38,15 +37,15 @@ export const AcademyApp = {
     render(os) {
         if (!os.user) {
             return `
-                <div class="max-w-2xl mx-auto text-center space-y-8 py-20">
-                    <div class="w-24 h-24 bg-accent-soft rounded-full flex items-center justify-center mx-auto text-academy shadow-xl border border-accent-soft">
+                <div class="max-w-2xl mx-auto text-center space-y-8 py-24 px-6">
+                    <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto text-blue-600">
                         <i data-lucide="lock" class="w-10 h-10"></i>
                     </div>
                     <div class="space-y-4">
-                        <h2 class="display text-4xl font-black tracking-tighter uppercase text-[var(--text)]">Authentication Required</h2>
-                        <p class="text-[var(--text-muted)] text-lg">Please sign in with Google to access the Academy curriculum and track your progress.</p>
+                        <h2 class="text-3xl font-bold text-slate-900">Access Restricted</h2>
+                        <p class="text-slate-600 text-lg">Please sign in with your Google account to access the Academy curriculum and track your learning progress.</p>
                     </div>
-                    <button onclick="os.handleLogin()" class="px-12 py-5 bg-academy text-white rounded-2xl font-bold uppercase tracking-[0.3em] text-xs shadow-2xl hover:opacity-90 transition-all">Sign In with Google</button>
+                    <button onclick="os.handleLogin()" class="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">Sign In with Google</button>
                 </div>
             `;
         }
@@ -68,65 +67,55 @@ export const AcademyApp = {
 
     renderEnrollmentForm(batch, os) {
         return `
-            <div class="max-w-2xl mx-auto space-y-12 animate-scale-in">
-                <button onclick="window.os.appMethods.academy.closeEnrollmentForm()" class="flex items-center space-x-2 text-[var(--text-muted)] hover:text-academy transition-colors group">
-                    <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
-                    <span class="text-[10px] mono uppercase tracking-widest">Back to Batch Details</span>
+            <div class="max-w-3xl mx-auto space-y-8 py-8 px-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <button onclick="window.os.appMethods.academy.closeEnrollmentForm()" class="flex items-center space-x-2 text-slate-500 hover:text-blue-600 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span class="text-sm font-medium">Back to Details</span>
                 </button>
 
-                <div class="space-y-4">
-                    <h2 class="display text-4xl md:text-6xl font-black tracking-tighter text-[var(--text)]">Batch <span class="text-academy">Enrollment</span></h2>
-                    <p class="text-[var(--text-muted)] text-lg">Complete your registration for <span class="text-academy font-bold">${batch.title}</span>.</p>
+                <div class="bg-white border border-slate-200 rounded-3xl p-8 md:p-12 shadow-xl shadow-slate-100">
+                    <div class="mb-10">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-2">Enroll in <span class="text-blue-600">${batch.title}</span></h2>
+                        <p class="text-slate-500">Fill in your details to start your learning journey.</p>
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); window.os.appMethods.academy.submitEnrollment('${batch.id}')" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Full Name</label>
+                                <input id="enroll-name" type="text" required value="${os.user.displayName}" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Email Address</label>
+                                <input id="enroll-email" type="email" required value="${os.user.email}" readonly class="w-full bg-slate-100 border border-slate-200 rounded-xl p-4 text-slate-500 cursor-not-allowed outline-none">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Phone Number</label>
+                                <input id="enroll-phone" type="tel" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="+91 00000 00000">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Experience Level</label>
+                                <select id="enroll-experience" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
+                                    <option>Beginner</option>
+                                    <option>Intermediate</option>
+                                    <option>Professional</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Why do you want to join?</label>
+                            <textarea id="enroll-message" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all min-h-[100px]" placeholder="Tell us about your learning goals..."></textarea>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit" class="w-full py-5 bg-blue-600 text-white rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 active:scale-[0.98]">
+                                Complete Enrollment • ${batch.price}
+                            </button>
+                            <p class="text-center text-[10px] text-slate-400 mt-4 uppercase tracking-widest font-medium">Secure checkout powered by Academy OS</p>
+                        </div>
+                    </form>
                 </div>
-
-                <form onsubmit="event.preventDefault(); window.os.appMethods.academy.submitEnrollment('${batch.id}')" class="space-y-8 bg-white border border-accent-soft p-8 md:p-12 rounded-[40px] glass shadow-2xl">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="space-y-3">
-                            <label class="text-[10px] mono uppercase tracking-widest text-[var(--text-muted)] font-bold">Full Name</label>
-                            <input id="enroll-name" type="text" required value="${os.user.displayName}" class="w-full bg-accent-soft border border-accent-soft rounded-2xl p-4 text-sm focus:border-academy outline-none transition-all" placeholder="Enter your name">
-                        </div>
-                        <div class="space-y-3">
-                            <label class="text-[10px] mono uppercase tracking-widest text-[var(--text-muted)] font-bold">Email Address</label>
-                            <input id="enroll-email" type="email" required value="${os.user.email}" readonly class="w-full bg-accent-soft/50 border border-accent-soft rounded-2xl p-4 text-sm text-[var(--text-muted)] cursor-not-allowed outline-none" placeholder="Enter your email">
-                        </div>
-                        <div class="space-y-3">
-                            <label class="text-[10px] mono uppercase tracking-widest text-[var(--text-muted)] font-bold">Phone Number</label>
-                            <input id="enroll-phone" type="tel" required class="w-full bg-accent-soft border border-accent-soft rounded-2xl p-4 text-sm focus:border-academy outline-none transition-all" placeholder="+91 00000 00000">
-                        </div>
-                        <div class="space-y-3">
-                            <label class="text-[10px] mono uppercase tracking-widest text-[var(--text-muted)] font-bold">Experience Level</label>
-                            <select id="enroll-experience" class="w-full bg-accent-soft border border-accent-soft rounded-2xl p-4 text-sm focus:border-academy outline-none transition-all appearance-none">
-                                <option>Beginner</option>
-                                <option>Intermediate</option>
-                                <option>Professional</option>
-                            </select>
-                        </div>
-                        <div class="space-y-3">
-                            <label class="text-[10px] mono uppercase tracking-widest text-[var(--text-muted)] font-bold">Country</label>
-                            <input id="enroll-country" type="text" required class="w-full bg-accent-soft border border-accent-soft rounded-2xl p-4 text-sm focus:border-academy outline-none transition-all" placeholder="Enter your country">
-                        </div>
-                        <div class="space-y-3">
-                            <label class="text-[10px] mono uppercase tracking-widest text-[var(--text-muted)] font-bold">City</label>
-                            <input id="enroll-city" type="text" required class="w-full bg-accent-soft border border-accent-soft rounded-2xl p-4 text-sm focus:border-academy outline-none transition-all" placeholder="Enter your city">
-                        </div>
-                        <div class="space-y-3">
-                            <label class="text-[10px] mono uppercase tracking-widest text-[var(--text-muted)] font-bold">Social Handle</label>
-                            <input id="enroll-social" type="text" required class="w-full bg-accent-soft border border-accent-soft rounded-2xl p-4 text-sm focus:border-academy outline-none transition-all" placeholder="@username">
-                        </div>
-                    </div>
-
-                    <div class="space-y-3">
-                        <label class="text-[10px] mono uppercase tracking-widest text-[var(--text-muted)] font-bold">Why do you want to join this batch?</label>
-                        <textarea id="enroll-message" class="w-full bg-accent-soft border border-accent-soft rounded-2xl p-4 text-sm focus:border-academy outline-none transition-all min-h-[120px]" placeholder="Tell us about your goals..."></textarea>
-                    </div>
-
-                    <div class="pt-6">
-                        <button type="submit" class="w-full py-6 bg-academy text-white rounded-3xl font-bold uppercase tracking-[0.4em] text-xs hover:opacity-90 transition-all shadow-xl hover:shadow-academy/20 hover:scale-[1.02] active:scale-95">
-                            Confirm Enrollment • ${batch.price}
-                        </button>
-                        <p class="text-center text-[9px] text-[var(--text-muted)] mt-6 uppercase tracking-widest">By enrolling, you agree to our terms of service and curriculum guidelines.</p>
-                    </div>
-                </form>
             </div>
         `;
     },
@@ -134,58 +123,63 @@ export const AcademyApp = {
     renderBatchList(os) {
         const purchasedBatches = os.userData?.purchasedBatches || [];
         return `
-            <div class="space-y-8 md:space-y-12">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8 md:mb-12">
-                    <div class="space-y-3 md:space-y-4">
-                        <h2 class="display text-3xl md:text-5xl font-black tracking-tighter leading-tight text-[var(--text)]">Academy <br class="md:hidden"/><span class="text-academy">Portal</span></h2>
-                        <p class="text-[var(--text-muted)] text-sm md:text-lg font-light max-w-md">Master the art of sound with our elite curriculum.</p>
+            <div class="max-w-7xl mx-auto px-4 py-12 space-y-12">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-8 border-b border-slate-100 pb-12">
+                    <div class="text-center md:text-left space-y-4">
+                        <h1 class="text-4xl md:text-6xl font-black text-slate-900 tracking-tight">Explore <span class="text-blue-600">Batches</span></h1>
+                        <p class="text-slate-500 text-lg max-w-xl">Join thousands of students learning from the best in the industry. Start your journey today.</p>
                     </div>
-                    <div class="flex items-center space-x-4 bg-accent-soft border border-accent-soft p-3 md:p-4 rounded-2xl glass w-full md:w-auto">
-                        <div class="w-10 h-10 rounded-xl bg-academy text-white flex items-center justify-center shadow-lg">
-                            <i data-lucide="book-open" class="w-5 h-5"></i>
+                    <div class="flex items-center space-x-6 bg-white border border-slate-200 p-6 rounded-3xl shadow-sm">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-100">
+                            <i data-lucide="graduation-cap" class="w-8 h-8"></i>
                         </div>
                         <div>
-                            <p class="text-[8px] mono text-[var(--text-muted)] uppercase tracking-widest">Curriculum</p>
-                            <p class="text-xs md:text-sm font-bold text-[var(--text)]">${ACADEMY_DATA.length} Modules Available</p>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Active Courses</p>
+                            <p class="text-2xl font-black text-slate-900">${ACADEMY_DATA.length} Batches</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     ${ACADEMY_DATA.map((batch, idx) => {
                         const isPurchased = purchasedBatches.includes(batch.id);
                         return `
                         <div onclick="window.os.appMethods.academy.handleBatchClick('${batch.id}')" 
-                             class="batch-card group bg-white border border-accent-soft rounded-[32px] p-6 space-y-5 cursor-pointer animate-fade-in shadow-sm hover:shadow-xl hover:border-academy hover:bg-accent-soft transition-all"
-                             style="animation-delay: ${idx * 0.1}s">
-                            <div class="aspect-video bg-white rounded-[20px] overflow-hidden relative shadow-lg">
-                                <img src="${batch.thumbnail || `https://picsum.photos/seed/${batch.id}/600/400`}" alt="Batch" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700">
-                                <div class="absolute inset-0 bg-gradient-to-t from-academy/40 to-transparent opacity-60"></div>
-                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <div class="w-12 h-12 bg-academy text-white rounded-full flex items-center justify-center shadow-2xl transform scale-90 group-hover:scale-100 transition-transform">
-                                        <i data-lucide="${isPurchased ? 'play' : 'lock'}" class="w-5 h-5 ${isPurchased ? 'fill-current' : ''}"></i>
-                                    </div>
-                                </div>
-                                <div class="absolute top-3 left-3">
-                                    <span class="text-[8px] mono bg-white/90 backdrop-blur-md text-academy px-3 py-1.5 rounded-lg uppercase tracking-widest border border-academy/20 font-bold">${batch.level}</span>
+                             class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden cursor-pointer hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-50/50 transition-all duration-500 animate-in fade-in slide-in-from-bottom-8"
+                             style="animation-delay: ${idx * 100}ms">
+                            <div class="aspect-video relative overflow-hidden">
+                                <img src="${batch.thumbnail || `https://picsum.photos/seed/${batch.id}/600/400`}" alt="${batch.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                                <div class="absolute top-4 left-4">
+                                    <span class="bg-white/90 backdrop-blur-sm text-blue-600 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-blue-100">${batch.level}</span>
                                 </div>
                                 ${!isPurchased ? `
-                                <div class="absolute top-3 right-3">
-                                    <span class="text-[8px] mono bg-academy text-white px-3 py-1.5 rounded-lg uppercase tracking-widest font-bold shadow-lg">${batch.price}</span>
+                                <div class="absolute bottom-4 right-4">
+                                    <span class="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg">${batch.price}</span>
                                 </div>
-                                ` : ''}
-                            </div>
-                            <div class="space-y-2">
-                                <h3 class="display text-xl font-bold tracking-tight text-[var(--text)] group-hover:text-academy transition-colors">${batch.title}</h3>
-                                <p class="text-[var(--text-muted)] text-[12px] font-light leading-relaxed line-clamp-2">${batch.description}</p>
-                            </div>
-                            <div class="pt-4 border-t border-white/40 flex items-center justify-between">
-                                <div class="flex items-center space-x-2 text-[9px] mono text-academy uppercase tracking-widest font-bold">
-                                    <i data-lucide="clock" class="w-3.5 h-3.5"></i>
-                                    <span>${batch.duration}</span>
+                                ` : `
+                                <div class="absolute inset-0 flex items-center justify-center bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div class="w-16 h-16 bg-white text-blue-600 rounded-full flex items-center justify-center shadow-2xl transform scale-90 group-hover:scale-100 transition-transform">
+                                        <i data-lucide="play" class="w-8 h-8 fill-current"></i>
+                                    </div>
                                 </div>
-                                <div class="flex items-center space-x-2 text-[9px] mono text-academy uppercase tracking-widest font-bold">
-                                    <span class="px-2 py-1 bg-white rounded-md border border-academy/10">${isPurchased ? 'Unlocked' : 'Locked'}</span>
+                                `}
+                            </div>
+                            <div class="p-8 space-y-4">
+                                <div class="space-y-2">
+                                    <h3 class="text-2xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">${batch.title}</h3>
+                                    <p class="text-slate-500 text-sm line-clamp-2 leading-relaxed">${batch.description}</p>
+                                </div>
+                                <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
+                                    <div class="flex items-center space-x-2 text-slate-400">
+                                        <i data-lucide="clock" class="w-4 h-4"></i>
+                                        <span class="text-xs font-bold uppercase tracking-wider">${batch.duration}</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-[10px] font-bold uppercase tracking-widest ${isPurchased ? 'text-green-600 bg-green-50' : 'text-blue-600 bg-blue-50'} px-3 py-1 rounded-full">
+                                            ${isPurchased ? 'Enrolled' : 'Available'}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -197,61 +191,55 @@ export const AcademyApp = {
 
     renderPurchaseScreen(batch, os) {
         return `
-            <div class="max-w-4xl mx-auto space-y-8 md:space-y-12 animate-scale-in px-2">
-                <button onclick="window.os.appMethods.academy.closePurchaseScreen()" class="flex items-center space-x-2 text-[var(--text-muted)] hover:text-sky-500 transition-colors group">
-                    <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
-                    <span class="text-[9px] md:text-[10px] mono uppercase tracking-widest">Back to Curriculum</span>
+            <div class="max-w-6xl mx-auto px-4 py-12 space-y-12 animate-in fade-in zoom-in-95 duration-500">
+                <button onclick="window.os.appMethods.academy.closePurchaseScreen()" class="flex items-center space-x-2 text-slate-500 hover:text-blue-600 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span class="text-sm font-medium">Back to Batches</span>
                 </button>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-                    <div class="space-y-6 md:space-y-8 order-2 md:order-1">
-                        <div class="space-y-3 md:space-y-4">
-                            <h2 class="display text-3xl md:text-6xl font-black tracking-tighter text-[var(--text)] leading-[0.9]">Unlock <br><span class="text-academy">${batch.title}</span></h2>
-                            <p class="text-[var(--text-muted)] text-base md:text-lg font-light leading-relaxed">Join the elite circle. This premium batch offers full access to the curriculum, project files, and direct feedback.</p>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="space-y-10">
+                        <div class="space-y-6">
+                            <span class="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest border border-blue-100">${batch.level} Course</span>
+                            <h2 class="text-5xl md:text-7xl font-black text-slate-900 tracking-tighter leading-[0.95]">Master <br><span class="text-blue-600">${batch.title}</span></h2>
+                            <p class="text-slate-500 text-xl leading-relaxed">Everything you need to go from zero to hero. Get lifetime access to high-quality videos, quizzes, and exclusive resources.</p>
                         </div>
-                        
-                        <div class="space-y-4 md:space-y-6">
-                            <div class="flex items-center space-x-4 p-4 bg-accent-soft rounded-2xl border border-accent-soft glass">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white dark:bg-slate-800 flex items-center justify-center text-academy shadow-sm">
-                                    <i data-lucide="check-circle" class="w-5 h-5 md:w-6 md:h-6"></i>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 flex items-start space-x-4">
+                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm">
+                                    <i data-lucide="infinity" class="w-5 h-5"></i>
                                 </div>
                                 <div>
-                                    <p class="text-xs md:text-sm font-bold text-[var(--text)]">Lifetime Access</p>
-                                    <p class="text-[8px] md:text-[10px] mono text-[var(--text-muted)] uppercase tracking-widest">No recurring fees</p>
+                                    <p class="font-bold text-slate-900">Lifetime Access</p>
+                                    <p class="text-xs text-slate-500">Learn at your own pace</p>
                                 </div>
                             </div>
-                            <div class="flex items-center space-x-4 p-4 bg-accent-soft rounded-2xl border border-accent-soft glass">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white dark:bg-slate-800 flex items-center justify-center text-academy shadow-sm">
-                                    <i data-lucide="download" class="w-5 h-5 md:w-6 md:h-6"></i>
+                            <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 flex items-start space-x-4">
+                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm">
+                                    <i data-lucide="file-check" class="w-5 h-5"></i>
                                 </div>
                                 <div>
-                                    <p class="text-xs md:text-sm font-bold text-[var(--text)]">Project Resources</p>
-                                    <p class="text-[8px] md:text-[10px] mono text-[var(--text-muted)] uppercase tracking-widest">Stems & MIDI included</p>
+                                    <p class="font-bold text-slate-900">Quizzes & Tasks</p>
+                                    <p class="text-xs text-slate-500">Validate your knowledge</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="pt-4 md:pt-6">
-                            <button onclick="window.os.appMethods.academy.openEnrollmentForm()" class="w-full py-5 md:py-6 bg-academy text-white rounded-2xl md:rounded-3xl font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-[10px] md:text-xs hover:opacity-90 transition-all shadow-xl hover:shadow-academy/20 hover:scale-[1.02] active:scale-95">
-                                Enroll Now • ${batch.price}
+                        <div class="pt-6">
+                            <button onclick="window.os.appMethods.academy.openEnrollmentForm()" class="w-full md:w-auto px-12 py-6 bg-blue-600 text-white rounded-2xl font-bold text-xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-100 hover:scale-105 active:scale-95">
+                                Enroll Now for ${batch.price}
                             </button>
                         </div>
                     </div>
 
-                    <div class="relative order-1 md:order-2">
-                        <div class="aspect-square bg-accent-soft rounded-[40px] md:rounded-[60px] overflow-hidden shadow-2xl border border-accent-soft relative group">
-                            <img src="${batch.thumbnail || `https://picsum.photos/seed/${batch.id}/800/800`}" class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-1000">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="w-20 h-20 md:w-24 md:h-24 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-full flex items-center justify-center shadow-2xl border border-white dark:border-slate-700">
-                                    <i data-lucide="lock" class="w-8 h-8 md:w-10 md:h-10 text-academy"></i>
-                                </div>
-                            </div>
-                            <div class="absolute bottom-6 left-6 right-6">
-                                <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl border border-white/50 dark:border-slate-700/50 shadow-lg">
-                                    <p class="text-[8px] mono text-academy uppercase tracking-widest font-bold mb-1">Curriculum Preview</p>
-                                    <p class="text-[10px] font-bold text-[var(--text)]">${batch.videos.length} Modules • ${batch.duration}</p>
-                                </div>
-                            </div>
+                    <div class="relative">
+                        <div class="aspect-square bg-white rounded-[60px] overflow-hidden shadow-2xl border border-slate-100 p-4">
+                            <img src="${batch.thumbnail || `https://picsum.photos/seed/${batch.id}/800/800`}" class="w-full h-full object-cover rounded-[48px]">
+                        </div>
+                        <div class="absolute -bottom-8 -left-8 bg-white p-8 rounded-[32px] shadow-2xl border border-slate-100 space-y-2 hidden md:block">
+                            <p class="text-xs font-bold text-blue-600 uppercase tracking-widest">Course Stats</p>
+                            <p class="text-2xl font-black text-slate-900">${batch.videos.length} Modules • ${batch.duration}</p>
                         </div>
                     </div>
                 </div>
@@ -264,83 +252,87 @@ export const AcademyApp = {
         const progress = Math.round(((currentIdx + 1) / this.state.selectedBatch.videos.length) * 100);
 
         return `
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
-                <!-- Video Player Area -->
-                <div class="lg:col-span-8 space-y-6 md:space-y-10">
-                    <div class="space-y-3 md:space-y-4">
-                        <div class="flex items-center justify-between text-[8px] md:text-[10px] mono text-[var(--text-muted)] uppercase tracking-[0.3em]">
-                            <span>Course Progress</span>
-                            <span>${progress}% Complete</span>
-                        </div>
-                        <div class="progress-bar bg-accent-soft">
-                            <div class="progress-fill bg-academy" style="width: ${progress}%"></div>
-                        </div>
-                    </div>
-
-                    <div class="aspect-video bg-slate-900 rounded-[24px] md:rounded-[48px] overflow-hidden border border-accent-soft shadow-2xl relative group">
-                        <video src="${this.state.activeVideo.url}" class="w-full h-full" controls autoplay></video>
-                    </div>
-                    
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 md:gap-8 p-2">
-                        <div class="space-y-2 md:space-y-3">
-                            <h2 class="display text-2xl md:text-4xl font-bold tracking-tight text-[var(--text)] leading-tight">${this.state.activeVideo.title}</h2>
-                            <div class="flex items-center space-x-4">
-                                <span class="text-[8px] md:text-[10px] mono bg-accent-soft text-academy px-3 py-1 rounded-full border border-accent-soft uppercase tracking-widest">Module ${currentIdx + 1}</span>
-                                <span class="text-[8px] md:text-[10px] mono text-[var(--text-muted)] uppercase tracking-widest">${this.state.activeVideo.duration}</span>
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <!-- Main Content -->
+                    <div class="lg:col-span-8 space-y-10">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                <span>Batch Progress</span>
+                                <span class="text-blue-600">${progress}% Complete</span>
+                            </div>
+                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-blue-600 transition-all duration-1000 ease-out" style="width: ${progress}%"></div>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-3 md:space-x-4 w-full md:w-auto">
-                            <button onclick="window.os.appMethods.academy.downloadNotes()" class="flex-1 md:flex-none flex items-center justify-center space-x-2 md:space-x-3 bg-white dark:bg-slate-900 border border-accent-soft px-4 md:px-8 py-4 md:py-5 rounded-2xl md:rounded-3xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-academy hover:bg-accent-soft transition-all glass">
-                                <i data-lucide="download" class="w-4 h-4"></i>
-                                <span class="hidden sm:inline">Resources</span>
-                                <span class="sm:hidden">Files</span>
-                            </button>
-                            <button onclick="window.os.appMethods.academy.startQuiz()" class="flex-1 md:flex-none flex items-center justify-center space-x-2 md:space-x-3 bg-academy text-white px-6 md:px-10 py-4 md:py-5 rounded-2xl md:rounded-3xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest hover:opacity-90 hover:scale-105 transition-all shadow-xl">
-                                <i data-lucide="help-circle" class="w-4 h-4"></i>
-                                <span>Quiz</span>
-                            </button>
+
+                        <div class="aspect-video bg-black rounded-[40px] overflow-hidden shadow-2xl border border-slate-200">
+                            <video src="${this.state.activeVideo.url}" class="w-full h-full" controls autoplay></video>
                         </div>
-                    </div>
-
-                    <div class="bg-white border border-accent-soft rounded-[32px] md:rounded-[48px] p-6 md:p-12 glass shadow-lg">
-                        <h4 class="display text-lg md:text-xl font-bold mb-4 md:mb-6 flex items-center text-[var(--text)]">
-                            <i data-lucide="file-text" class="w-5 h-5 mr-3 text-academy"></i>
-                            Module Overview
-                        </h4>
-                        <div style="color: black;" class="font-medium leading-relaxed text-sm md:text-lg whitespace-pre-wrap">${this.state.activeVideo.fetchedNotes || 'Loading module overview...'}</div>
-                    </div>
-                </div>
-
-                <!-- Curriculum Sidebar -->
-                <div class="lg:col-span-4 space-y-6 md:space-y-8">
-                    <div class="bg-white dark:bg-slate-900 border border-accent-soft rounded-3xl md:rounded-[40px] p-5 md:p-8 glass shadow-lg">
-                        <h4 class="display text-base md:text-xl font-bold mb-4 md:mb-8 px-2 text-[var(--text)]">Curriculum</h4>
-                        <div class="space-y-2 md:space-y-3 max-h-[300px] md:max-h-none overflow-y-auto custom-scrollbar">
-                            ${this.state.selectedBatch.videos.map((v, idx) => `
-                                <div onclick="window.os.appMethods.academy.playVideo('${v.id}')" class="flex items-center space-x-3 md:space-x-5 p-3 md:p-5 rounded-2xl md:rounded-[28px] border ${v.id === this.state.activeVideo.id ? 'bg-academy text-white shadow-xl border-academy' : 'bg-accent-soft border-accent-soft hover:bg-academy/5'} cursor-pointer transition-all group">
-                                    <div class="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-2xl ${v.id === this.state.activeVideo.id ? 'bg-white text-academy' : 'bg-accent-soft text-academy/60'} flex items-center justify-center text-[9px] md:text-xs font-bold transition-all">
-                                        ${idx + 1}
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-[10px] md:text-sm font-bold ${v.id === this.state.activeVideo.id ? 'text-white' : 'text-[var(--text-muted)] group-hover:text-academy'}">${v.title}</p>
-                                        <p class="text-[7px] md:text-[9px] mono ${v.id === this.state.activeVideo.id ? 'text-sky-100' : 'text-[var(--text-muted)]'} uppercase mt-0.5">${v.duration}</p>
-                                    </div>
-                                    ${v.id === this.state.activeVideo.id ? '<div class="w-1 h-1 bg-white rounded-full animate-pulse"></div>' : '<i data-lucide="play" class="w-3 h-3 text-academy/40 group-hover:text-academy"></i>'}
+                        
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                            <div class="space-y-3">
+                                <h2 class="text-4xl font-black text-slate-900 tracking-tight">${this.state.activeVideo.title}</h2>
+                                <div class="flex items-center space-x-4">
+                                    <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest border border-blue-100">Module ${currentIdx + 1}</span>
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">${this.state.activeVideo.duration}</span>
                                 </div>
-                            `).join('')}
+                            </div>
+                            <div class="flex items-center space-x-4 w-full md:w-auto">
+                                <button onclick="window.os.appMethods.academy.downloadNotes()" class="flex-1 md:flex-none flex items-center justify-center space-x-3 bg-white border border-slate-200 px-8 py-4 rounded-2xl text-xs font-bold uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                    <span>Resources</span>
+                                </button>
+                                <button onclick="window.os.appMethods.academy.startQuiz()" class="flex-1 md:flex-none flex items-center justify-center space-x-3 bg-blue-600 text-white px-8 py-4 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
+                                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                                    <span>Take Quiz</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white border border-slate-200 rounded-[40px] p-10 md:p-14 shadow-sm">
+                            <div class="flex items-center space-x-4 mb-8">
+                                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                                    <i data-lucide="file-text" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="text-2xl font-bold text-slate-900">Module Overview</h4>
+                            </div>
+                            <div class="text-slate-900 leading-relaxed text-lg whitespace-pre-wrap font-medium">${this.state.activeVideo.fetchedNotes || 'Loading module overview...'}</div>
                         </div>
                     </div>
-                    
-                    <div class="bg-white dark:bg-slate-900 border border-accent-soft rounded-3xl md:rounded-[40px] p-5 md:p-8 glass shadow-lg space-y-4 md:space-y-6">
-                        <h5 class="display text-[10px] md:text-sm font-bold uppercase tracking-widest text-[var(--text-muted)]">Instructor</h5>
-                        <div class="flex items-center space-x-3 md:space-x-4">
-                            <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-accent-soft overflow-hidden border border-accent-soft">
-                                <img src="https://picsum.photos/seed/instructor/100/100" alt="Instructor" class="w-full h-full object-cover">
+
+                    <!-- Sidebar -->
+                    <div class="lg:col-span-4 space-y-8">
+                        <div class="bg-white border border-slate-200 rounded-[40px] p-8 shadow-sm">
+                            <h4 class="text-xl font-bold text-slate-900 mb-8 px-2">Course Curriculum</h4>
+                            <div class="space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                                ${this.state.selectedBatch.videos.map((v, idx) => `
+                                    <div onclick="window.os.appMethods.academy.playVideo('${v.id}')" 
+                                         class="flex items-center space-x-4 p-4 rounded-2xl border transition-all cursor-pointer group ${v.id === this.state.activeVideo.id ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-100' : 'bg-slate-50 border-slate-100 hover:border-blue-200 hover:bg-blue-50/30'}">
+                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${v.id === this.state.activeVideo.id ? 'bg-white text-blue-600' : 'bg-white text-slate-400 border border-slate-100'}">
+                                            ${idx + 1}
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-bold truncate ${v.id === this.state.activeVideo.id ? 'text-white' : 'text-slate-700 group-hover:text-blue-600'}">${v.title}</p>
+                                            <p class="text-[10px] font-bold uppercase tracking-widest mt-1 ${v.id === this.state.activeVideo.id ? 'text-blue-100' : 'text-slate-400'}">${v.duration}</p>
+                                        </div>
+                                        ${v.id === this.state.activeVideo.id ? '<div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>' : ''}
+                                    </div>
+                                `).join('')}
                             </div>
-                            <div>
-                                <p class="text-xs md:text-sm font-bold text-[var(--text)]">Alex Rivers</p>
-                                <p class="text-[7px] md:text-[9px] mono text-[var(--text-muted)] uppercase tracking-widest">Master Producer</p>
+                        </div>
+                        
+                        <div class="bg-blue-600 rounded-[40px] p-10 text-white space-y-6 shadow-xl shadow-blue-100">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md overflow-hidden border border-white/20">
+                                    <img src="https://picsum.photos/seed/instructor/200/200" alt="Instructor" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="text-lg font-bold">Alex Rivers</p>
+                                    <p class="text-xs font-bold uppercase tracking-widest text-blue-100">Master Instructor</p>
+                                </div>
                             </div>
+                            <p class="text-sm text-blue-50 leading-relaxed">"Music production is a journey of discovery. I'm here to guide you through every beat and melody."</p>
                         </div>
                     </div>
                 </div>
@@ -352,22 +344,22 @@ export const AcademyApp = {
         if (this.state.quizState.finished) {
             const percentage = Math.round((this.state.quizState.score / this.state.activeVideo.quiz.length) * 100);
             return `
-                <div class="flex flex-col items-center justify-center text-center space-y-8 md:space-y-12 py-10 md:py-20 animate-fade-in">
-                    <div class="relative">
-                        <div class="w-32 h-32 md:w-48 md:h-48 bg-white rounded-[40px] flex items-center justify-center border border-accent-soft shadow-2xl animate-float">
-                            <i data-lucide="trophy" class="w-16 h-16 md:w-24 md:h-24 text-academy"></i>
+                <div class="max-w-3xl mx-auto py-20 px-6 text-center space-y-12 animate-in zoom-in-95 duration-500">
+                    <div class="relative inline-block">
+                        <div class="w-40 h-40 bg-blue-50 rounded-[48px] flex items-center justify-center mx-auto text-blue-600 shadow-xl border border-blue-100">
+                            <i data-lucide="award" class="w-20 h-20"></i>
                         </div>
-                        <div class="absolute -top-4 -right-4 w-12 h-12 md:w-16 md:h-16 bg-academy text-white rounded-2xl flex items-center justify-center font-bold text-lg md:text-xl shadow-xl">
+                        <div class="absolute -top-4 -right-4 bg-blue-600 text-white w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-black shadow-lg">
                             ${percentage}%
                         </div>
                     </div>
                     <div class="space-y-4">
-                        <h3 class="display text-4xl md:text-6xl font-black tracking-tighter leading-none text-[var(--text)]">Assessment Complete</h3>
-                        <p class="text-[var(--text-muted)] text-lg md:text-xl font-light">You correctly identified ${this.state.quizState.score} out of ${this.state.activeVideo.quiz.length} key concepts.</p>
+                        <h2 class="text-5xl font-black text-slate-900 tracking-tight">Quiz Completed!</h2>
+                        <p class="text-slate-500 text-xl">You scored <span class="text-blue-600 font-bold">${this.state.quizState.score}</span> out of <span class="font-bold">${this.state.activeVideo.quiz.length}</span>.</p>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-4 md:gap-6 w-full max-w-lg pt-4">
-                        <button onclick="window.os.appMethods.academy.closeQuiz()" class="flex-1 px-8 md:px-12 py-5 md:py-6 bg-academy text-white rounded-[20px] md:rounded-[24px] text-[10px] md:text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl">Return to Course</button>
-                        <button onclick="window.os.appMethods.academy.resetQuiz()" class="flex-1 px-8 md:px-12 py-5 md:py-6 bg-white border border-accent-soft text-academy rounded-[20px] md:rounded-[24px] text-[10px] md:text-xs font-bold uppercase tracking-widest hover:bg-accent-soft transition-all">Try Again</button>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4 pt-6">
+                        <button onclick="window.os.appMethods.academy.closeQuiz()" class="px-12 py-5 bg-blue-600 text-white rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">Back to Course</button>
+                        <button onclick="window.os.appMethods.academy.resetQuiz()" class="px-12 py-5 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-slate-50 transition-all">Try Again</button>
                     </div>
                 </div>
             `;
@@ -377,41 +369,35 @@ export const AcademyApp = {
         const progress = ((this.state.quizState.index + 1) / this.state.activeVideo.quiz.length) * 100;
 
         return `
-            <div class="space-y-8 md:space-y-16 animate-fade-in">
-                <!-- Quiz Header -->
-                <div class="flex justify-between items-start gap-4">
-                    <div class="space-y-6 md:space-y-8 flex-1">
-                        <div class="space-y-3 md:space-y-4">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-8 md:w-12 h-1 bg-academy"></div>
-                                <p class="text-[10px] md:text-xs mono text-academy uppercase tracking-[0.5em] font-bold">Module Assessment // ${this.state.quizState.index + 1} of ${this.state.activeVideo.quiz.length}</p>
-                            </div>
-                            <div class="w-full max-w-xs h-1 bg-accent-soft rounded-full overflow-hidden">
-                                <div class="h-full bg-academy transition-all duration-500" style="width: ${progress}%"></div>
-                            </div>
+            <div class="max-w-4xl mx-auto py-12 px-4 space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-500">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-8">
+                    <div class="space-y-2">
+                        <p class="text-xs font-bold text-blue-600 uppercase tracking-[0.3em]">Question ${this.state.quizState.index + 1} of ${this.state.activeVideo.quiz.length}</p>
+                        <div class="w-64 h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-600 transition-all duration-500" style="width: ${progress}%"></div>
                         </div>
-                        <h3 class="display text-2xl md:text-6xl font-black leading-[1.1] tracking-tight max-w-3xl text-[var(--text)]">${question.q}</h3>
                     </div>
-                    <button onclick="window.os.appMethods.academy.closeQuiz()" class="w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-accent-soft border border-accent-soft flex items-center justify-center text-academy/60 hover:text-academy hover:bg-accent-soft transition-all group glass">
-                        <i data-lucide="x" class="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-90 transition-transform duration-300"></i>
+                    <button onclick="window.os.appMethods.academy.closeQuiz()" class="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-center">
+                        <i data-lucide="x" class="w-6 h-6"></i>
                     </button>
                 </div>
 
-                <!-- Options Grid -->
-                <div class="grid grid-cols-1 gap-4 md:gap-5">
-                    ${question.o.map((opt, idx) => `
-                        <button onclick="window.os.appMethods.academy.answerQuiz(${idx})" class="quiz-option w-full p-6 md:p-10 bg-white border border-accent-soft rounded-[24px] md:rounded-[32px] text-left hover:border-academy/50 hover:bg-accent-soft transition-all group flex justify-between items-center glass">
-                            <div class="flex items-center space-x-4 md:space-x-8">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-accent-soft border border-accent-soft flex items-center justify-center text-academy group-hover:bg-academy group-hover:text-white group-hover:border-academy transition-all font-bold mono text-sm md:text-base">
-                                    ${String.fromCharCode(65 + idx)}
+                <div class="space-y-12">
+                    <h3 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">${question.q}</h3>
+                    <div class="grid grid-cols-1 gap-4">
+                        ${question.o.map((opt, idx) => `
+                            <button onclick="window.os.appMethods.academy.answerQuiz(${idx})" 
+                                    class="group w-full p-8 bg-white border border-slate-200 rounded-3xl text-left hover:border-blue-500 hover:bg-blue-50/30 transition-all flex items-center justify-between">
+                                <div class="flex items-center space-x-6">
+                                    <div class="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 font-bold flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
+                                        ${String.fromCharCode(65 + idx)}
+                                    </div>
+                                    <span class="text-xl font-bold text-slate-700 group-hover:text-slate-900">${opt}</span>
                                 </div>
-                                <span class="font-bold text-[var(--text-muted)] group-hover:text-[var(--text)] text-lg md:text-2xl tracking-tight">${opt}</span>
-                            </div>
-                            <div class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-accent-soft flex items-center justify-center group-hover:border-academy group-hover:bg-academy/10 transition-all">
-                                <i data-lucide="arrow-right" class="w-4 h-4 md:w-5 md:h-5 text-academy/20 group-hover:text-academy"></i>
-                            </div>
-                        </button>
-                    `).join('')}
+                                <i data-lucide="chevron-right" class="w-6 h-6 text-slate-200 group-hover:text-blue-600 transition-all"></i>
+                            </button>
+                        `).join('')}
+                    </div>
                 </div>
             </div>
         `;
@@ -428,10 +414,6 @@ export const AcademyApp = {
             this.state.showPurchaseScreen = batch;
             os.refreshApp();
         }
-    },
-
-    redirectToPurchase(url) {
-        window.open(url, '_blank');
     },
 
     selectBatch(batchId, os = window.os) {
@@ -461,62 +443,40 @@ export const AcademyApp = {
         try {
             const { doc, updateDoc, addDoc, collection, arrayUnion, serverTimestamp } = await import('firebase/firestore');
             
-            // Collect form data
             const enrollmentData = {
                 uid: os.user.uid,
                 name: document.getElementById('enroll-name').value,
                 email: document.getElementById('enroll-email').value,
                 phone: document.getElementById('enroll-phone').value,
                 experience: document.getElementById('enroll-experience').value,
-                country: document.getElementById('enroll-country').value,
-                city: document.getElementById('enroll-city').value,
-                socialHandle: document.getElementById('enroll-social').value,
-                message: document.getElementById('enroll-message').value,
                 course: batchId,
                 status: 'pending',
                 createdAt: serverTimestamp()
             };
 
-            // 1. Create enrollment record
-            try {
-                await addDoc(collection(db, 'enrollments'), enrollmentData);
-            } catch (error) {
-                handleFirestoreError(error, OperationType.CREATE, 'enrollments');
-            }
+            await addDoc(collection(db, 'enrollments'), enrollmentData);
 
-            // 2. Unlock batch for user (as per current behavior)
             const userRef = doc(db, 'users', os.user.uid);
-            try {
-                await updateDoc(userRef, {
-                    purchasedBatches: arrayUnion(batchId)
-                });
-            } catch (error) {
-                handleFirestoreError(error, OperationType.UPDATE, `users/${os.user.uid}`);
-            }
+            await updateDoc(userRef, {
+                purchasedBatches: arrayUnion(batchId)
+            });
 
-            // 3. Send email notification via server
             try {
                 const batch = ACADEMY_DATA.find(b => b.id === batchId);
                 await fetch('/api/enroll', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        enrollmentData, 
-                        batchName: batch ? batch.title : batchId 
-                    })
+                    body: JSON.stringify({ enrollmentData, batchName: batch ? batch.title : batchId })
                 });
-            } catch (emailError) {
-                console.error('Email Notification Error:', emailError);
-                // We don't show an error to the user since the enrollment itself succeeded
-            }
+            } catch (e) {}
             
-            os.showNotification('Enrollment successful! Welcome to the batch.', 'success');
+            os.showNotification('Enrollment successful!', 'success');
             this.state.showEnrollmentForm = null;
             this.state.showPurchaseScreen = null;
             this.selectBatch(batchId, os);
         } catch (error) {
             console.error('Enrollment Error:', error);
-            os.showNotification('Failed to complete enrollment. Please try again.', 'error');
+            os.showNotification('Enrollment failed. Please try again.', 'error');
         }
     },
 
@@ -525,17 +485,16 @@ export const AcademyApp = {
         this.state.activeVideo = video;
         this.state.quizState = { active: false, index: 0, score: 0, finished: false };
         
-        // Fetch notes if it's a URL or .txt file
         if (video.notes && (video.notes.startsWith('http') || video.notes.startsWith('/') || video.notes.endsWith('.txt'))) {
             try {
                 const response = await fetch(video.notes);
                 if (response.ok) {
                     this.state.activeVideo.fetchedNotes = await response.text();
                 } else {
-                    this.state.activeVideo.fetchedNotes = "Failed to load module overview from file.";
+                    this.state.activeVideo.fetchedNotes = "Module overview content is currently being updated.";
                 }
             } catch (e) {
-                this.state.activeVideo.fetchedNotes = "Error loading module overview file.";
+                this.state.activeVideo.fetchedNotes = "Module overview content is currently being updated.";
             }
         } else {
             this.state.activeVideo.fetchedNotes = video.notes;
