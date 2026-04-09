@@ -9,8 +9,8 @@ export const ACADEMY_DATA = [
         level: 'Beginner',
         duration: '0:00',
         price: '₹0',
-        cover: '/graphics/ss.png',
-        thumbnail: 'graphics/ss.png',
+        cover: 'cadenx-music/graphics/ss.png',
+        thumbnail: 'cadenx-music/graphics/ss.png',
         purchaseUrl: 'https://forms.google.com/purchase-batch-1',
         videos: [
             { 
@@ -20,7 +20,7 @@ export const ACADEMY_DATA = [
                 thumbnail: '/graphics/sursadhana.png', 
                 url: '/graphics/sursadhana.png',
                 quizUrl: 'https://forms.google.com/your-quiz-link-1',
-                notes: '/notes/advanced.txt'
+                notes: '/notes/advanced_eq.txt'
             },
         ]
     },
