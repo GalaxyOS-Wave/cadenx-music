@@ -20,7 +20,7 @@ export const ACADEMY_DATA = [
                 thumbnail: '/graphics/sursadhana.png', 
                 url: '/graphics/sursadhana.png',
                 quizUrl: 'https://forms.google.com/your-quiz-link-1',
-                notes: '/notes/advanced_eq.txt'
+                notes: '/public/notes/advanced_eq.txt'
             },
         ]
     },
