@@ -23,16 +23,13 @@
         "name": { "type": "string", "description": "The student's full name." },
         "email": { "type": "string", "format": "email", "description": "The student's email." },
         "phone": { "type": "string", "description": "The student's phone number." },
-        "country": { "type": "string", "description": "The student's country." },
-        "city": { "type": "string", "description": "The student's city." },
-        "socialHandle": { "type": "string", "description": "The student's social media handle." },
         "course": { "type": "string", "description": "The selected course/batch ID." },
         "experience": { "type": "string", "description": "The student's experience level." },
         "message": { "type": "string", "description": "The student's goals or message." },
         "status": { "type": "string", "enum": ["pending", "approved", "rejected"], "description": "The status of the enrollment." },
         "createdAt": { "type": "string", "format": "date-time", "description": "When the enrollment was submitted." }
       },
-      "required": ["uid", "name", "email", "course"]
+      "required": ["uid", "name", "email", "phone", "course", "experience", "createdAt"]
     }
   },
   "firestore": {
