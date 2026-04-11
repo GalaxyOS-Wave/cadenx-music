@@ -323,19 +323,6 @@ export const AcademyApp = {
                             </div>
                         </div>
                         
-                        <div class="bg-blue-600 rounded-[40px] p-10 text-white space-y-6 shadow-xl shadow-blue-100">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md overflow-hidden border border-white/20">
-                                    <img src="https://picsum.photos/seed/instructor/200/200" alt="Instructor" class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <p class="text-lg font-bold">Alex Rivers</p>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-blue-100">Master Instructor</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-blue-50 leading-relaxed">"Music production is a journey of discovery. I'm here to guide you through every beat and melody."</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         `;
