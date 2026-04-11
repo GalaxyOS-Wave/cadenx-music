@@ -7,7 +7,7 @@ export const ACADEMY_DATA = [
         title: 'Sur Sadhana - Batch for beginners',
         description: 'The best basic production course for beginners. Master the fundamentals of music theory, DAW basics, and your first arrangement.',
         level: 'Beginner',
-        duration: '12 Hours',
+        duration: '00 Hours',
         price: '₹0',
         cover: 'graphics/sursadhana.png',
         thumbnail: 'graphics/sursadhana.png',
@@ -16,25 +16,12 @@ export const ACADEMY_DATA = [
             { 
                 id: 'v1', 
                 title: 'Welcome to the batch!', 
-                duration: '15:00', 
+                duration: '00:00', 
                 thumbnail: '/graphics/sursadhana.png', 
                 url: '/graphics/sursadhana.png',
                 quizUrl: 'https://forms.google.com/your-quiz-link-1',
                 notes: '/notes/welcome1.txt',
-                quiz: [
-                    { q: "What is the primary focus of this batch?", o: ["Advanced Mixing", "Beginner Fundamentals", "Live Performance", "Marketing"], a: 1 },
-                    { q: "Which DAW is recommended for beginners?", o: ["Any DAW", "Only Ableton", "Only FL Studio", "Only Logic"], a: 0 }
-                ]
             },
-            { 
-                id: 'v2', 
-                title: 'Introduction to Sound', 
-                duration: '45:00', 
-                thumbnail: '/graphics/sursadhana.png', 
-                url: '/graphics/sursadhana.png',
-                quizUrl: 'https://forms.google.com/your-quiz-link-2',
-                notes: 'In this module, we explore the physics of sound and how it translates to digital audio.'
-            }
         ]
     },
 ];
