@@ -22,7 +22,7 @@ export const SupportApp = {
             title: 'Live Chat', 
             desc: 'Average response time: 2 mins', 
             btn: 'Start Chat',
-            link: 'https://your-chat-app.com' // 🔗 replace with your chat link
+            link: 'https://wa.me/917296075929' // 🔗 replace with your chat link
         },
         { 
             icon: 'mail', 
