@@ -4,7 +4,7 @@ import { db, handleFirestoreError, OperationType } from '../firebase.js';
 export const ACADEMY_DATA = [
     {
         id: 'b1',
-        title: 'Sur Sadhana - Batch for beginners',
+        title: 'sursadhana.png',
         description: 'The best basic production course for beginners. Master the fundamentals of music theory, DAW basics, and your first arrangement.',
         level: 'Beginner',
         duration: '00 Hours',
