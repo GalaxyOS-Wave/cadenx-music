@@ -9,7 +9,8 @@ export const ACADEMY_DATA = [
         level: 'Beginner',
         duration: '12 Hours',
         price: '₹0',
-        cover: '/public/sscover.png',
+        cover: '/graphics/sursadhana.png',
+        thumbnail: '/graphics/sursadhana.png',
         purchaseUrl: 'https://forms.google.com/purchase-batch-1',
         videos: [
             { 
@@ -296,7 +297,8 @@ export const AcademyApp = {
                             ` : `
                                 <video id="academy-video-player" 
                                        src="${this.state.activeVideo.url}" 
-                                       class="w-full h-full" 
+                                       poster="${this.state.activeVideo.thumbnail}"
+                                       class="w-full h-full object-cover" 
                                        controls 
                                        autoplay
                                        playsinline
@@ -344,15 +346,19 @@ export const AcademyApp = {
                             <div class="space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                                 ${this.state.selectedBatch.videos.map((v, idx) => `
                                     <div onclick="window.os.appMethods.academy.playVideo('${v.id}')" 
-                                         class="flex items-center space-x-4 p-4 rounded-2xl border transition-all cursor-pointer group ${v.id === this.state.activeVideo.id ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-100' : 'bg-slate-50 border-slate-100 hover:border-blue-200 hover:bg-blue-50/30'}">
-                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${v.id === this.state.activeVideo.id ? 'bg-white text-blue-600' : 'bg-white text-slate-400 border border-slate-100'}">
-                                            ${idx + 1}
+                                         class="flex items-center space-x-4 p-3 rounded-2xl border transition-all cursor-pointer group ${v.id === this.state.activeVideo.id ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-100' : 'bg-slate-50 border-slate-100 hover:border-blue-200 hover:bg-blue-50/30'}">
+                                        <div class="relative w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-slate-200">
+                                            <img src="${v.thumbnail}" 
+                                                 onerror="this.onerror=null; this.src='https://picsum.photos/seed/${v.id}/100/60'"
+                                                 class="w-full h-full object-cover">
+                                            <div class="absolute inset-0 flex items-center justify-center bg-black/20">
+                                                <i data-lucide="play" class="w-3 h-3 text-white fill-current"></i>
+                                            </div>
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <p class="text-sm font-bold truncate ${v.id === this.state.activeVideo.id ? 'text-white' : 'text-slate-700 group-hover:text-blue-600'}">${v.title}</p>
                                             <p class="text-[10px] font-bold uppercase tracking-widest mt-1 ${v.id === this.state.activeVideo.id ? 'text-blue-100' : 'text-slate-400'}">${v.duration}</p>
                                         </div>
-                                        ${v.id === this.state.activeVideo.id ? '<div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>' : ''}
                                     </div>
                                 `).join('')}
                             </div>
@@ -611,4 +617,3 @@ export const AcademyApp = {
         window.URL.revokeObjectURL(url);
     }
 };
-
