@@ -7,10 +7,10 @@ export const ACADEMY_DATA = [
         title: 'Sur Sadhana - Batch for beginners',
         description: 'The best basic production course for beginners. Master the fundamentals of music theory, DAW basics, and your first arrangement.',
         level: 'Beginner',
-        duration: '00 Hours',
-        price: 'FREE',
-        cover: 'public/graphics/Add a heading (1).png',
-        thumbnail: 'public/graphics/Add a heading (1).png',
+        duration: '0 Hours',
+        price: 'Free',
+        cover: 'public/graphics/sscover.png',
+        thumbnail: 'public/graphics/sscover.png',
         purchaseUrl: 'https://forms.google.com/purchase-batch-1',
         videos: [
             { 
@@ -20,8 +20,7 @@ export const ACADEMY_DATA = [
                 thumbnail: '/graphics/sursadhana.png', 
                 url: '/graphics/lecture1.mp4',
                 quizUrl: 'https://forms.google.com/your-quiz-link-1',
-                notes: '/notes/welcome1.txt',
-             
+                notes: '/notes/welcome1.txt
             },
         ]
     },
@@ -38,9 +37,17 @@ export const AcademyApp = {
 
     resolvePath(path) {
         if (!path) return '';
-        if (path.startsWith('http') || path.startsWith('data:') || path.startsWith('/')) return path;
-        // If it's just a filename, assume it's in /graphics/
-        return `/graphics/${path}`;
+        // If it's a full URL or data URI, return as is
+        if (path.startsWith('http') || path.startsWith('data:')) return path;
+        
+        // Clean the path: remove leading slashes and 'graphics/' if it's already there
+        let cleanPath = path;
+        if (cleanPath.startsWith('/')) cleanPath = cleanPath.substring(1);
+        if (cleanPath.startsWith('public/')) cleanPath = cleanPath.substring(7);
+        if (cleanPath.startsWith('graphics/')) cleanPath = cleanPath.substring(9);
+        
+        // Return absolute path from root
+        return `/graphics/${cleanPath}`;
     },
 
     render(os) {
@@ -298,7 +305,7 @@ export const AcademyApp = {
                                        autoplay
                                        playsinline
                                        webkit-playsinline
-                                       onerror="this.parentElement.innerHTML = '<div class=\'flex flex-col items-center justify-center h-full text-white p-8 text-center\'><i data-lucide=\'alert-circle\' class=\'w-12 h-12 mb-4 text-red-500\'></i><p class=\'text-lg font-bold\'>Video Unavailable</p><p class=\'text-sm text-slate-400\'>Please ensure the video file is uploaded to /public/graphics/ and the path is correct.</p></div>'; lucide.createIcons();"
+                                       onerror="this.parentElement.innerHTML = '<div class=&quot;flex flex-col items-center justify-center h-full text-white p-8 text-center&quot;><i data-lucide=&quot;alert-circle&quot; class=&quot;w-12 h-12 mb-4 text-red-500&quot;></i><p class=&quot;text-lg font-bold&quot;>Video Unavailable</p><p class=&quot;text-sm text-slate-400&quot;>Please ensure the video file is uploaded to /public/graphics/ and the path is correct.</p></div>'; lucide.createIcons();"
                                 ></video>
                             `}
                         </div>
