@@ -4,24 +4,37 @@ import { db, handleFirestoreError, OperationType } from '../firebase.js';
 export const ACADEMY_DATA = [
     {
         id: 'b1',
-        title: 'sursadhana.png',
+        title: 'Sur Sadhana - Batch for beginners',
         description: 'The best basic production course for beginners. Master the fundamentals of music theory, DAW basics, and your first arrangement.',
         level: 'Beginner',
-        duration: '00 Hours',
+        duration: '12 Hours',
         price: '₹0',
-        cover: 'public/notes/sscover.png',
-        thumbnail: 'sursadhana.png',
+        cover: '/graphics/sursadhana.png',
+        thumbnail: '/graphics/sursadhana.png',
         purchaseUrl: 'https://forms.google.com/purchase-batch-1',
         videos: [
             { 
                 id: 'v1', 
                 title: 'Welcome to the batch!', 
-                duration: '00:00', 
+                duration: '15:00', 
                 thumbnail: '/graphics/sursadhana.png', 
-                url: '/graphics/sursadhana.png',
+                url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
                 quizUrl: 'https://forms.google.com/your-quiz-link-1',
                 notes: '/notes/welcome1.txt',
+                quiz: [
+                    { q: "What is the primary focus of this batch?", o: ["Advanced Mixing", "Beginner Fundamentals", "Live Performance", "Marketing"], a: 1 },
+                    { q: "Which DAW is recommended for beginners?", o: ["Any DAW", "Only Ableton", "Only FL Studio", "Only Logic"], a: 0 }
+                ]
             },
+            { 
+                id: 'v2', 
+                title: 'Introduction to Sound', 
+                duration: '45:00', 
+                thumbnail: '/graphics/sursadhana.png', 
+                url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+                quizUrl: 'https://forms.google.com/your-quiz-link-2',
+                notes: 'In this module, we explore the physics of sound and how it translates to digital audio.'
+            }
         ]
     },
 ];
@@ -149,7 +162,9 @@ export const AcademyApp = {
                              class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden cursor-pointer hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-50/50 transition-all duration-500 animate-in fade-in slide-in-from-bottom-8"
                              style="animation-delay: ${idx * 100}ms">
                             <div class="aspect-video relative overflow-hidden">
-                                <img src="${batch.thumbnail || `https://picsum.photos/seed/${batch.id}/600/400`}" alt="${batch.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                <img src="${batch.thumbnail || `https://picsum.photos/seed/${batch.id}/600/400`}" 
+                                     onerror="this.onerror=null; this.src='https://picsum.photos/seed/${batch.id}/600/400'"
+                                     alt="${batch.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                                 <div class="absolute top-4 left-4">
                                     <span class="bg-white/90 backdrop-blur-sm text-blue-600 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-blue-100">${batch.level}</span>
@@ -160,8 +175,9 @@ export const AcademyApp = {
                                 </div>
                                 ` : `
                                 <div class="absolute inset-0 flex items-center justify-center bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <div class="w-16 h-16 bg-white text-blue-600 rounded-full flex items-center justify-center shadow-2xl transform scale-90 group-hover:scale-100 transition-transform">
-                                        <i data-lucide="play" class="w-8 h-8 fill-current"></i>
+                                    <div class="px-6 py-3 bg-white text-blue-600 rounded-2xl flex items-center space-x-3 shadow-2xl transform scale-90 group-hover:scale-100 transition-all font-bold">
+                                        <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+                                        <span>Continue Learning</span>
                                     </div>
                                 </div>
                                 `}
@@ -236,7 +252,9 @@ export const AcademyApp = {
 
                     <div class="relative">
                         <div class="aspect-square bg-white rounded-[60px] overflow-hidden shadow-2xl border border-slate-100 p-4">
-                            <img src="${batch.thumbnail || `https://picsum.photos/seed/${batch.id}/800/800`}" class="w-full h-full object-cover rounded-[48px]">
+                            <img src="${batch.thumbnail || `https://picsum.photos/seed/${batch.id}/800/800`}" 
+                                 onerror="this.onerror=null; this.src='https://picsum.photos/seed/${batch.id}/800/800'"
+                                 class="w-full h-full object-cover rounded-[48px]">
                         </div>
                         <div class="absolute -bottom-8 -left-8 bg-white p-8 rounded-[32px] shadow-2xl border border-slate-100 space-y-2 hidden md:block">
                             <p class="text-xs font-bold text-blue-600 uppercase tracking-widest">Course Stats</p>
@@ -267,8 +285,14 @@ export const AcademyApp = {
                             </div>
                         </div>
 
-                        <div class="aspect-video bg-black rounded-[40px] overflow-hidden shadow-2xl border border-slate-200">
-                            <video src="${this.state.activeVideo.url}" class="w-full h-full" controls autoplay></video>
+                        <div class="aspect-video bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl border border-slate-200 relative group">
+                            <video id="academy-video-player" 
+                                   src="${this.state.activeVideo.url}" 
+                                   class="w-full h-full" 
+                                   controls 
+                                   autoplay
+                                    onerror="this.parentElement.innerHTML = '<div class=&quot;flex flex-col items-center justify-center h-full text-white p-8 text-center&quot;><i data-lucide=&quot;alert-circle&quot; class=&quot;w-12 h-12 mb-4 text-red-500&quot;></i><p class=&quot;text-lg font-bold&quot;>Video Unavailable</p><p class=&quot;text-sm text-slate-400&quot;>The video lecture is currently being processed or the link is invalid.</p></div>'; lucide.createIcons();"
+                            ></video>
                         </div>
                         
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
@@ -323,12 +347,38 @@ export const AcademyApp = {
                             </div>
                         </div>
                         
+                        <div class="bg-blue-600 rounded-[40px] p-10 text-white space-y-6 shadow-xl shadow-blue-100">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md overflow-hidden border border-white/20">
+                                    <img src="https://picsum.photos/seed/instructor/200/200" alt="Instructor" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="text-lg font-bold">Alex Rivers</p>
+                                    <p class="text-xs font-bold uppercase tracking-widest text-blue-100">Master Instructor</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-blue-50 leading-relaxed">"Music production is a journey of discovery. I'm here to guide you through every beat and melody."</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
     },
 
     renderQuiz() {
+        if (!this.state.activeVideo || !this.state.activeVideo.quiz) {
+            return `
+                <div class="max-w-2xl mx-auto text-center py-24 space-y-6">
+                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto text-slate-400">
+                        <i data-lucide="help-circle" class="w-10 h-10"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-900">No Quiz Available</h2>
+                    <p class="text-slate-500 text-lg">This module does not have an interactive quiz yet. Please check back later.</p>
+                    <button onclick="window.os.appMethods.academy.closeQuiz()" class="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all">Back to Course</button>
+                </div>
+            `;
+        }
+
         if (this.state.quizState.finished) {
             const percentage = Math.round((this.state.quizState.score / this.state.activeVideo.quiz.length) * 100);
             return `
@@ -479,8 +529,15 @@ export const AcademyApp = {
 
     async playVideo(videoId, os = window.os) {
         const video = this.state.selectedBatch.videos.find(v => v.id === videoId);
-        this.state.activeVideo = video;
+        if (!video) return;
+
+        this.state.activeVideo = { ...video, fetchedNotes: 'Loading module overview...' };
         this.state.quizState = { active: false, index: 0, score: 0, finished: false };
+        os.refreshApp();
+        
+        // Scroll to video player
+        const player = document.getElementById('academy-video-player');
+        if (player) player.scrollIntoView({ behavior: 'smooth', block: 'center' });
         
         if (video.notes && (video.notes.startsWith('http') || video.notes.startsWith('/') || video.notes.endsWith('.txt'))) {
             try {
@@ -494,7 +551,7 @@ export const AcademyApp = {
                 this.state.activeVideo.fetchedNotes = "Module overview content is currently being updated.";
             }
         } else {
-            this.state.activeVideo.fetchedNotes = video.notes;
+            this.state.activeVideo.fetchedNotes = video.notes || "No overview available for this module.";
         }
         os.refreshApp();
     },
@@ -543,3 +600,4 @@ export const AcademyApp = {
         window.URL.revokeObjectURL(url);
     }
 };
+
