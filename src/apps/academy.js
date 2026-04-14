@@ -9,7 +9,7 @@ export const ACADEMY_DATA = [
         level: 'Beginner',
         duration: '00 Hours',
         price: '₹0',
-        cover: 'sursadhana.png',
+        cover: 'public/notes/sscover.png',
         thumbnail: 'sursadhana.png',
         purchaseUrl: 'https://forms.google.com/purchase-batch-1',
         videos: [
