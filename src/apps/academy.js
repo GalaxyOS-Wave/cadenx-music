@@ -18,7 +18,7 @@ export const ACADEMY_DATA = [
                 title: 'Welcome to the batch!', 
                 duration: '15:00', 
                 thumbnail: '/graphics/sursadhana.png', 
-                url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                url: '/graphics/lecture1.mp4',
                 quizUrl: 'https://forms.google.com/your-quiz-link-1',
                 notes: '/notes/welcome1.txt',
                 quiz: [
@@ -31,7 +31,7 @@ export const ACADEMY_DATA = [
                 title: 'Introduction to Sound', 
                 duration: '45:00', 
                 thumbnail: '/graphics/sursadhana.png', 
-                url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+                url: '/graphics/lecture2.mp4',
                 quizUrl: 'https://forms.google.com/your-quiz-link-2',
                 notes: 'In this module, we explore the physics of sound and how it translates to digital audio.'
             }
@@ -286,13 +286,25 @@ export const AcademyApp = {
                         </div>
 
                         <div class="aspect-video bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl border border-slate-200 relative group">
-                            <video id="academy-video-player" 
-                                   src="${this.state.activeVideo.url}" 
-                                   class="w-full h-full" 
-                                   controls 
-                                   autoplay
-                                    onerror="this.parentElement.innerHTML = '<div class=&quot;flex flex-col items-center justify-center h-full text-white p-8 text-center&quot;><i data-lucide=&quot;alert-circle&quot; class=&quot;w-12 h-12 mb-4 text-red-500&quot;></i><p class=&quot;text-lg font-bold&quot;>Video Unavailable</p><p class=&quot;text-sm text-slate-400&quot;>The video lecture is currently being processed or the link is invalid.</p></div>'; lucide.createIcons();"
-                            ></video>
+                            ${this.state.activeVideo.url.includes('youtube.com') || this.state.activeVideo.url.includes('youtu.be') ? `
+                                <iframe 
+                                    src="${this.state.activeVideo.url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}" 
+                                    class="w-full h-full" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                                </iframe>
+                            ` : `
+                                <video id="academy-video-player" 
+                                       src="${this.state.activeVideo.url}" 
+                                       class="w-full h-full" 
+                                       controls 
+                                       autoplay
+                                       playsinline
+                                       webkit-playsinline
+                                       onerror="this.parentElement.innerHTML = '<div class=\'flex flex-col items-center justify-center h-full text-white p-8 text-center\'><i data-lucide=\'alert-circle\' class=\'w-12 h-12 mb-4 text-red-500\'></i><p class=\'text-lg font-bold\'>Video Unavailable</p><p class=\'text-sm text-slate-400\'>Please ensure the video file is uploaded to /public/graphics/ and the path is correct.</p></div>'; lucide.createIcons();"
+                                ></video>
+                            `}
                         </div>
                         
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
