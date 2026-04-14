@@ -9,8 +9,8 @@ export const ACADEMY_DATA = [
         level: 'Beginner',
         duration: 'UPDATING soon',
         price: 'FREE',
-        cover: '/public/sscover.png',
-        thumbnail: '/graphics/sursadhana.png',
+        cover: 'public/graphics/Add a heading (1).png',
+        thumbnail: 'public/graphics/Add a heading (1).png',
         purchaseUrl: 'https://forms.google.com/purchase-batch-1',
         videos: [
             { 
