@@ -10,7 +10,7 @@ export const ACADEMY_DATA = [
         duration: '00 Hours',
         price: '₹0',
         cover: 'graphics/sursadhana.png',
-        thumbnail: 'graphics/sursadhana.png',
+        thumbnail: 'sursadhana.png',
         purchaseUrl: 'https://forms.google.com/purchase-batch-1',
         videos: [
             { 
